@@ -1,193 +1,165 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BattleZone</title>
-  <style>
-    body { margin:0; font-family: Arial, sans-serif; background:#0d0d0d; color:#fff; }
-    nav { display:flex; justify-content:space-between; padding:15px 30px; background:#111; position:fixed; width:100%; top:0; z-index:10; }
-    nav .logo { font-size:1.8rem; font-weight:bold; }
-    nav ul { display:flex; gap:15px; list-style:none; flex-wrap:wrap; }
-    nav a { color:#0ff; text-decoration:none; font-weight:500; }
-    .hero { min-height:80vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background: linear-gradient(135deg,#0ff,#ff6f00); padding:0 20px; }
-    .hero h1 { font-size:3rem; margin-bottom:10px; }
-    .hero p { font-size:1.2rem; margin-bottom:20px; }
-    .btn { background:#ff6f00; color:#000; padding:12px 25px; border-radius:6px; text-decoration:none; transition:0.3s; display:inline-block; }
-    .btn:hover { background:#0ff; color:#111; }
-    section { padding:100px 20px 50px 20px; text-align:center; }
-    .games-grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
-    .game-card { background:#1a1a1a; padding:20px; border-radius:12px; width:280px; transition: transform 0.3s; display:flex; flex-direction:column; align-items:center; }
-    .game-card:hover { transform:scale(1.05); }
-    .game-card iframe { width:100%; height:180px; border-radius:10px; margin-bottom:10px; }
-    .download-links { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin:10px 0; }
-    .download-links a img { display:block; margin:5px auto; max-width:140px; }
-    form input, form textarea, form button { display:block; width:90%; margin:10px auto; padding:10px; border-radius:6px; border:none; }
-    form button { background:#ff6f00; color:#000; font-weight:bold; cursor:pointer; }
-    form button:hover { background:#0ff; color:#111; }
-    footer { background:#111; padding:15px; text-align:center; color:#0ff; }
-    .tips-list { text-align:left; max-width:280px; margin:10px auto; padding-left:20px; }
-    @media(max-width:768px) {
-      .games-grid { flex-direction:column; align-items:center; }
-      .hero h1 { font-size:2.2rem; }
-      .hero p { font-size:1rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BattleZone</title>
+<style>
+  body { margin:0; font-family: Arial, sans-serif; background:#0d0d0d; color:#fff; overflow-x:hidden;}
+  nav { display:flex; justify-content:space-between; padding:15px 30px; background:#111; position:fixed; width:100%; top:0; z-index:100; box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
+  nav .logo { font-size:1.8rem; font-weight:bold; color:#0ff; }
+  nav ul { display:flex; gap:15px; list-style:none; flex-wrap:wrap; }
+  nav a { color:#0ff; text-decoration:none; font-weight:500; transition:0.3s; }
+  nav a:hover { color:#ff6f00; }
+
+  .hero { min-height:80vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background: linear-gradient(135deg,#0ff,#ff6f00); padding:0 20px; animation: heroFade 1.5s ease-in;}
+  @keyframes heroFade { from {opacity:0;} to {opacity:1;} }
+  .hero h1 { font-size:3rem; margin-bottom:10px; color:#000; text-shadow: 2px 2px #fff; }
+  .hero p { font-size:1.2rem; margin-bottom:20px; color:#111; }
+  .btn { background: linear-gradient(45deg, #ff6f00, #0ff); color:#000; padding:12px 25px; border-radius:8px; text-decoration:none; font-weight:bold; transition:0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+  .btn:hover { background: linear-gradient(45deg, #0ff, #ff6f00); color:#111; transform:scale(1.05); }
+
+  section { padding:100px 20px 50px 20px; text-align:center; }
+  .games-grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+  .game-card { background:#1a1a1a; padding:20px; border-radius:15px; width:300px; transition: transform 0.3s, box-shadow 0.3s, opacity 0.8s; display:flex; flex-direction:column; align-items:center; opacity:0; transform: translateY(30px);}
+  .game-card.visible { opacity:1; transform: translateY(0);}
+  .game-card:hover { transform:scale(1.05); box-shadow: 0 10px 25px rgba(255,111,0,0.5);}
+  .game-card iframe { width:100%; height:180px; border-radius:12px; margin-bottom:10px; }
+  .download-links { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin:10px 0; }
+  .download-links a img { display:block; margin:5px auto; max-width:140px; transition: transform 0.3s; }
+  .download-links a img:hover { transform: scale(1.1); }
+  .tips-list { text-align:left; max-width:280px; margin:10px auto; padding-left:20px; }
+  form input, form textarea, form button { display:block; width:90%; margin:10px auto; padding:10px; border-radius:8px; border:none; }
+  form button { background: linear-gradient(45deg,#ff6f00,#0ff); color:#000; font-weight:bold; cursor:pointer; transition:0.3s; }
+  form button:hover { background: linear-gradient(45deg,#0ff,#ff6f00); color:#111; transform:scale(1.05);}
+  footer { background:#111; padding:20px; text-align:center; color:#0ff; box-shadow: 0 -2px 5px rgba(0,0,0,0.5); }
+
+  @media(max-width:768px) { .games-grid { flex-direction:column; align-items:center; } .hero h1 { font-size:2.2rem; } .hero p { font-size:1rem; } }
+</style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">BattleZone</div>
-    <ul>
-      <li><a href="#home">Home</a></li>
-      <li><a href="#games">Games</a></li>
-      <li><a href="#page2">More Games</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+<nav>
+  <div class="logo">BattleZone</div>
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#games">Games</a></li>
+    <li><a href="#page2">More Games</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
 
-  <!-- Hero Section -->
-  <section id="home" class="hero">
-    <h1>Battle Awaits from RK</h1>
-    <p>Step into the most intense battle royale experiences ever created.</p>
-    <a href="#games" class="btn">Discover Games</a>
-  </section>
+<section id="home" class="hero">
+  <h1>Battle Awaits from RK</h1>
+  <p>Step into the most intense battle royale experiences ever created.</p>
+  <a href="#games" class="btn">Discover Games</a>
+</section>
 
-  <!-- Games Section -->
-  <section id="games">
-    <h2>Top Battle Royale Games</h2>
-    <div class="games-grid">
+<section id="games">
+<h2>Top Battle Royale Games</h2>
+<div class="games-grid">
 
-      <!-- PUBG -->
-      <div class="game-card">
-        <h3>PUBG</h3>
-        <p>Intense survival battleground action in a massive map.</p>
-        <iframe src="https://www.youtube.com/embed/uCd6tbUAy6o" allowfullscreen></iframe>
-        <div class="download-links">
-          <a href="https://play.google.com/store/apps/details?id=com.tencent.ig" target="_blank">
-            <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">
-          </a>
-          <a href="https://apps.apple.com/app/pubg-mobile/id1330123889" target="_blank">
-            <img alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
-          </a>
-        </div>
-        <h4>Pro Tips:</h4>
-        <ul class="tips-list">
-          <li>Land in less crowded areas to gather resources safely.</li>
-          <li>Keep an eye on the shrinking play zone.</li>
-          <li>Communicate with teammates for strategic advantage.</li>
-        </ul>
-      </div>
+<!-- BGMI -->
+<div class="game-card">
+  <h3>BGMI</h3>
+  <p>Intense survival battleground action in India.</p>
+  <iframe src="https://www.youtube.com/embed/uCd6tbUAy6o" allowfullscreen></iframe>
+  <div class="download-links">
+    <a href="https://play.google.com/store/apps/details?id=com.pubg.imobile" target="_blank">
+      <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">
+    </a>
+    <a href="https://apps.apple.com/in/app/battlegrounds-mobile-india/id1588171877" target="_blank">
+      <img alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
+    </a>
+  </div>
+  <h4>Pro Tips:</h4>
+  <ul class="tips-list">
+    <li>Less crowded areas में land करें।</li>
+    <li>Play zone देखें और safe रहें।</li>
+    <li>Teammates के साथ communicate करें।</li>
+  </ul>
+</div>
 
-      <!-- Free Fire -->
-      <div class="game-card">
-        <h3>Free Fire</h3>
-        <p>Fast-paced battle royale with unique character abilities.</p>
-        <iframe src="https://www.youtube.com/embed/oq2Rz2I11l0" allowfullscreen></iframe>
-        <div class="download-links">
-          <a href="https://play.google.com/store/apps/details?id=com.dts.freefireth" target="_blank">
-            <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">
-          </a>
-          <a href="https://apps.apple.com/app/garena-free-fire/id1300146617" target="_blank">
-            <img alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
-          </a>
-        </div>
-        <h4>Pro Tips:</h4>
-        <ul class="tips-list">
-          <li>Use character abilities strategically.</li>
-          <li>Keep moving to avoid enemy fire.</li>
-          <li>Land quickly to collect weapons and gear.</li>
-        </ul>
-      </div>
+<!-- Free Fire India -->
+<div class="game-card">
+  <h3>Free Fire India</h3>
+  <p>Fast-paced battle royale with unique abilities.</p>
+  <iframe src="https://www.youtube.com/embed/oq2Rz2I11l0" allowfullscreen></iframe>
+  <div class="download-links">
+    <a href="https://play.google.com/store/apps/details?id=com.garena.game.ffi" target="_blank">
+      <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">
+    </a>
+    <a href="https://apps.apple.com/in/app/garena-free-fire/id1300146617" target="_blank">
+      <img alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
+    </a>
+  </div>
+  <h4>Pro Tips:</h4>
+  <ul class="tips-list">
+    <li>Abilities का सही इस्तेमाल करें।</li>
+    <li>Move करते रहें, enemy fire से बचें।</li>
+    <li>Weapons जल्दी collect करें।</li>
+  </ul>
+</div>
 
-      <!-- Fortnite -->
-      <div class="game-card">
-        <h3>Fortnite</h3>
-        <p>Build, fight, and survive in a colorful world.</p>
-        <iframe src="https://www.youtube.com/embed/yGqbypEMcVA" allowfullscreen></iframe>
-        <div class="download-links">
-          <a href="https://www.epicgames.com/fortnite/en-US/download" target="_blank" class="btn">Download PC/Mac</a>
-          <a href="https://apps.apple.com/app/fortnite/id1261357853" target="_blank">
-            <img alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
-          </a>
-        </div>
-        <h4>Pro Tips:</h4>
-        <ul class="tips-list">
-          <li>Build quickly to gain height advantage.</li>
-          <li>Explore the map for loot and rare items.</li>
-        </ul>
-      </div>
+</div>
+</section>
 
-    </div>
-  </section>
+<section id="page2">
+<h2>More Battle Royale Games</h2>
+<div class="games-grid">
 
-  <!-- More Games Section -->
-  <section id="page2">
-    <h2>More Battle Royale Games & Insights</h2>
-    <div class="games-grid">
+<div class="game-card">
+<h3>Call of Duty: Warzone</h3>
+<iframe src="https://www.youtube.com/embed/pqPCFUUbMiU" allowfullscreen></iframe>
+<div class="download-links">
+  <a href="https://www.callofduty.com/warzone" target="_blank" class="btn">Download PC/Console</a>
+</div>
+</div>
 
-      <!-- Call of Duty: Warzone -->
-      <div class="game-card">
-        <h3>Call of Duty: Warzone</h3>
-        <iframe src="https://www.youtube.com/embed/pqPCFUUbMiU" allowfullscreen></iframe>
-        <div class="download-links">
-          <a href="https://www.callofduty.com/warzone" target="_blank" class="btn">Download PC/Console</a>
-        </div>
-      </div>
+<div class="game-card">
+<h3>Ring of Elysium</h3>
+<iframe src="https://www.youtube.com/embed/XMwBox8FITU" allowfullscreen></iframe>
+<div class="download-links">
+  <a href="https://www.ringofelysium.com/" target="_blank" class="btn">Download PC</a>
+</div>
+</div>
 
-      <!-- Ring of Elysium -->
-      <div class="game-card">
-        <h3>Ring of Elysium</h3>
-        <iframe src="https://www.youtube.com/embed/XMwBox8FITU" allowfullscreen></iframe>
-        <div class="download-links">
-          <a href="https://www.ringofelysium.com/" target="_blank" class="btn">Download PC</a>
-        </div>
-      </div>
+</div>
+</section>
 
-      <!-- Rules of Survival -->
-      <div class="game-card">
-        <h3>Rules of Survival</h3>
-        <iframe src="https://www.youtube.com/embed/MIaxTzmuTO0" allowfullscreen></iframe>
-        <div class="download-links">
-          <a href="https://play.google.com/store/apps/details?id=com.neteasegames.ros.gb" target="_blank">
-            <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">
-          </a>
-          <a href="https://apps.apple.com/app/rules-of-survival/id1258243503" target="_blank">
-            <img alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
-          </a>
-        </div>
-      </div>
+<section id="contact">
+<h2>Contact Us</h2>
+<form>
+  <input type="text" placeholder="Name" required>
+  <input type="email" placeholder="Email" required>
+  <textarea placeholder="Message" required></textarea>
+  <button type="submit">Send</button>
+</form>
+</section>
 
-    </div>
-  </section>
+<footer>
+<p>&copy; 2025 BattleZone</p>
+</footer>
 
-  <!-- Contact Section -->
-  <section id="contact">
-    <h2>Contact Us</h2>
-    <form>
-      <input type="text" placeholder="Name" required>
-      <input type="email" placeholder="Email" required>
-      <textarea placeholder="Message" required></textarea>
-      <button type="submit">Send</button>
-    </form>
-  </section>
+<script>
+// Smooth scroll
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if(target) target.scrollIntoView({behavior:'smooth'});
+  });
+});
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 BattleZone</p>
-  </footer>
-
-  <!-- Smooth Scroll Script -->
-  <script>
-    document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        const target = document.querySelector(link.getAttribute('href'));
-        if(target) target.scrollIntoView({behavior:'smooth'});
-      });
-    });
-  </script>
+// Scroll reveal for game cards
+const cards = document.querySelectorAll('.game-card');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, {threshold:0.2});
+cards.forEach(card => observer.observe(card));
+</script>
 
 </body>
 </html>
