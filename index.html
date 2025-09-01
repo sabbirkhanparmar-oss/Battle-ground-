@@ -3,162 +3,287 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BattleZone</title>
+<title>BattleZone Ultimate</title>
 <style>
-  body { margin:0; font-family: Arial, sans-serif; background:#0d0d0d; color:#fff; overflow-x:hidden;}
-  nav { display:flex; justify-content:space-between; padding:15px 30px; background:#111; position:fixed; width:100%; top:0; z-index:100; box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
-  nav .logo { font-size:1.8rem; font-weight:bold; color:#0ff; }
-  nav ul { display:flex; gap:15px; list-style:none; flex-wrap:wrap; }
-  nav a { color:#0ff; text-decoration:none; font-weight:500; transition:0.3s; }
-  nav a:hover { color:#ff6f00; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Arial',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hidden;transition:0.5s;}
+a{text-decoration:none;color:inherit;}
+ul{list-style:none;}
 
-  .hero { min-height:80vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background: linear-gradient(135deg,#0ff,#ff6f00); padding:0 20px; animation: heroFade 1.5s ease-in;}
-  @keyframes heroFade { from {opacity:0;} to {opacity:1;} }
-  .hero h1 { font-size:3rem; margin-bottom:10px; color:#000; text-shadow: 2px 2px #fff; }
-  .hero p { font-size:1.2rem; margin-bottom:20px; color:#111; }
-  .btn { background: linear-gradient(45deg, #ff6f00, #0ff); color:#000; padding:12px 25px; border-radius:8px; text-decoration:none; font-weight:bold; transition:0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
-  .btn:hover { background: linear-gradient(45deg, #0ff, #ff6f00); color:#111; transform:scale(1.05); }
+/* Dark/Light Mode */
+body.light{background:#f5f5f5;color:#111;}
+body.light nav{background:#fff;}
+body.light #mode-toggle{background:#0ff;color:#111;}
 
-  section { padding:100px 20px 50px 20px; text-align:center; }
-  .games-grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
-  .game-card { background:#1a1a1a; padding:20px; border-radius:15px; width:300px; transition: transform 0.3s, box-shadow 0.3s, opacity 0.8s; display:flex; flex-direction:column; align-items:center; opacity:0; transform: translateY(30px);}
-  .game-card.visible { opacity:1; transform: translateY(0);}
-  .game-card:hover { transform:scale(1.05); box-shadow: 0 10px 25px rgba(255,111,0,0.5);}
-  .game-card iframe { width:100%; height:180px; border-radius:12px; margin-bottom:10px; }
-  .download-links { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin:10px 0; }
-  .download-links a img { display:block; margin:5px auto; max-width:140px; transition: transform 0.3s; }
-  .download-links a img:hover { transform: scale(1.1); }
-  .tips-list { text-align:left; max-width:280px; margin:10px auto; padding-left:20px; }
-  form input, form textarea, form button { display:block; width:90%; margin:10px auto; padding:10px; border-radius:8px; border:none; }
-  form button { background: linear-gradient(45deg,#ff6f00,#0ff); color:#000; font-weight:bold; cursor:pointer; transition:0.3s; }
-  form button:hover { background: linear-gradient(45deg,#0ff,#ff6f00); color:#111; transform:scale(1.05);}
-  footer { background:#111; padding:20px; text-align:center; color:#0ff; box-shadow: 0 -2px 5px rgba(0,0,0,0.5); }
+/* Navbar */
+nav{position:fixed;width:100%;top:0;left:0;background:#111;display:flex;justify-content:space-between;align-items:center;padding:15px 30px;z-index:100;transition:0.3s;}
+nav .logo{font-size:1.8rem;font-weight:bold;color:#0ff;}
+nav ul{display:flex;gap:20px;flex-wrap:wrap;}
+nav a{font-weight:500;transition:0.3s;}
+nav a:hover{color:#ff6f00;}
+nav .menu-toggle{display:none; cursor:pointer; font-size:1.8rem; color:#0ff;}
 
-  @media(max-width:768px) { .games-grid { flex-direction:column; align-items:center; } .hero h1 { font-size:2.2rem; } .hero p { font-size:1rem; } }
+/* Hero Section */
+.hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;}
+.hero video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:brightness(0.3);}
+.hero::before{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(45deg,#0ff,#ff6f00,#0ff,#ff6f00);background-size:400% 400%;animation:gradientBG 15s ease infinite, overlayPulse 3s ease-in-out infinite;z-index:-1;opacity:0.5;}
+@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%;}}
+@keyframes overlayPulse {0%{opacity:0.4;}50%{opacity:0.6;}100%{opacity:0.4;}}
+.hero h1{font-size:3rem;margin-bottom:20px;color:#0ff;text-shadow:2px 2px #000;white-space:nowrap;overflow:hidden;border-right:3px solid #0ff;}
+.hero .typing{width:0;animation:typing 4s steps(40) forwards, blink 0.7s infinite step-end;}
+@keyframes typing{from{width:0;} to{width:100%;}}
+@keyframes blink{50%{border-color:transparent;}}
+.hero .btn{background:linear-gradient(45deg,#ff6f00,#0ff);padding:12px 25px;border-radius:8px;font-weight:bold;transition:0.3s;color:#000;animation:btnHover 2s infinite alternate;}
+@keyframes btnHover{0%{transform:scale(1);}100%{transform:scale(1.05);}}
+.hero .btn:hover{background:linear-gradient(45deg,#0ff,#ff6f00);transform:scale(1.1);}
+
+/* Filter Buttons */
+.filter-buttons{margin:20px 0;display:flex;justify-content:center;gap:15px;flex-wrap:wrap;}
+.filter-buttons button{padding:8px 15px;border-radius:8px;border:none;background:#0ff;color:#000;cursor:pointer;font-weight:bold;transition:0.3s;}
+.filter-buttons button:hover,.filter-buttons button.active{background:#ff6f00;color:#fff;transform:scale(1.1);box-shadow:0 5px 15px rgba(255,111,0,0.5);}
+
+/* Games Grid */
+.games-grid{display:flex;gap:20px;overflow-x:auto;padding:20px 0;scroll-behavior:smooth;}
+.games-grid::-webkit-scrollbar{height:10px;}
+.games-grid::-webkit-scrollbar-thumb{background:#0ff;border-radius:5px;}
+.game-card{flex:0 0 300px;background:#1a1a1a;padding:20px;border-radius:15px;transition:transform 0.5s, box-shadow 0.5s, opacity 0.8s;cursor:pointer;opacity:0;transform:translateY(30px);perspective:1000px;}
+.game-card.visible{opacity:1;transform:translateY(0);}
+.game-card:hover{transform:rotateY(10deg) rotateX(2deg) scale(1.07);box-shadow:0 20px 40px rgba(255,111,0,0.6);}
+.game-card iframe{width:100%;height:180px;border-radius:10px;margin-bottom:10px;transition:transform 0.4s, box-shadow 0.4s;}
+.game-card iframe:hover{transform:scale(1.08);box-shadow:0 10px 25px rgba(255,111,0,0.5);}
+
+/* Download Links */
+.download-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:10px 0;}
+.download-links img{max-width:130px;transition: transform 0.3s, box-shadow 0.3s;cursor:pointer;}
+.download-links img:hover{transform:scale(1.2) rotate(-2deg);box-shadow:0 8px 20px rgba(255,111,0,0.6);}
+
+/* Contact */
+form input,form textarea,form button{display:block;width:90%;margin:10px auto;padding:10px;border-radius:8px;border:none;}
+form button{background:linear-gradient(45deg,#ff6f00,#0ff);color:#000;font-weight:bold;cursor:pointer;transition:0.3s;}
+form button:hover{animation:buttonPulse 1s infinite alternate;}
+@keyframes buttonPulse{0%{transform:scale(1);}100%{transform:scale(1.08);}}
+
+/* Footer */
+footer{background:#111;padding:20px;text-align:center;color:#0ff;}
+
+/* Dark/Light toggle */
+#mode-toggle{position:fixed;bottom:20px;right:20px;background:#0ff;color:#000;padding:10px 15px;border-radius:50px;cursor:pointer;font-weight:bold;z-index:999;transition:0.3s;}
+#mode-toggle:hover{background:#ff6f00;color:#fff;transform:scale(1.1);}
+
+/* Responsive */
+@media(max-width:768px){
+nav ul{display:none;flex-direction:column;position:absolute;top:60px;right:20px;background:#111;padding:10px;border-radius:8px;}
+nav ul.show{display:flex;}
+nav li{margin:10px 0;}
+nav .menu-toggle{display:block;}
+.hero h1{font-size:2rem;}
+.hero .btn{font-size:1rem;padding:10px 20px;}
+.games-grid{flex-direction:row;align-items:center;gap:15px;}
+.game-card{flex:0 0 80%;}
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="logo">BattleZone</div>
-  <ul>
-    <li><a href="#home">Home</a></li>
-    <li><a href="#games">Games</a></li>
-    <li><a href="#page2">More Games</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+<div class="logo">BattleZone</div>
+<div class="menu-toggle">&#9776;</div>
+<ul>
+<li><a href="#home">Home</a></li>
+<li><a href="#games">Games</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
 </nav>
 
+<div id="mode-toggle">Light/Dark</div>
+
+<!-- Hero Section -->
 <section id="home" class="hero">
-  <h1>Battle Awaits from RK</h1>
-  <p>Step into the most intense battle royale experiences ever created.</p>
-  <a href="#games" class="btn">Discover Games</a>
+<video autoplay muted loop playsinline>
+<source src="https://cdn.pixabay.com/vimeo/589333506/space-battle-6735.mp4" type="video/mp4">
+आपका ब्राउज़र वीडियो सपोर्ट नहीं करता।
+</video>
+<h1 class="typing">Step into the ultimate battle royale experience!</h1>
+<a href="#games" class="btn">Discover Games</a>
 </section>
 
+<!-- Games Section -->
 <section id="games">
-<h2>Top Battle Royale Games</h2>
+<h2 style="text-align:center;margin-top:20px;">Top Battle Royale Games</h2>
+<div class="filter-buttons">
+<button data-filter="all" class="active">All</button>
+<button data-filter="mobile">Mobile</button>
+<button data-filter="pc">PC</button>
+</div>
 <div class="games-grid">
 
+<!-- Game Cards -->
 <!-- BGMI -->
-<div class="game-card">
-  <h3>BGMI</h3>
-  <p>Intense survival battleground action in India.</p>
-  <iframe src="https://www.youtube.com/embed/uCd6tbUAy6o" allowfullscreen></iframe>
-  <div class="download-links">
-    <a href="https://play.google.com/store/apps/details?id=com.pubg.imobile" target="_blank">
-      <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">
-    </a>
-    <a href="https://apps.apple.com/in/app/battlegrounds-mobile-india/id1588171877" target="_blank">
-      <img alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
-    </a>
-  </div>
-  <h4>Pro Tips:</h4>
-  <ul class="tips-list">
-    <li>Less crowded areas में land करें।</li>
-    <li>Play zone देखें और safe रहें।</li>
-    <li>Teammates के साथ communicate करें।</li>
-  </ul>
+<div class="game-card" data-category="mobile">
+<h3>BGMI</h3>
+<p>Intense survival battleground action in India.</p>
+<iframe src="https://www.youtube.com/embed/uCd6tbUAy6o" frameborder="0" allowfullscreen></iframe>
+<div class="download-links">
+<a href="https://play.google.com/store/apps/details?id=com.pubg.imobile" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Google Play"></a>
+<a href="https://apps<a href="https://apps.apple.com/in/app/battlegrounds-mobile-india/id1588171877" target="_blank"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store"></a>
+</div>
 </div>
 
-<!-- Free Fire India -->
-<div class="game-card">
-  <h3>Free Fire India</h3>
-  <p>Fast-paced battle royale with unique abilities.</p>
-  <iframe src="https://www.youtube.com/embed/oq2Rz2I11l0" allowfullscreen></iframe>
-  <div class="download-links">
-    <a href="https://play.google.com/store/apps/details?id=com.garena.game.ffi" target="_blank">
-      <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">
-    </a>
-    <a href="https://apps.apple.com/in/app/garena-free-fire/id1300146617" target="_blank">
-      <img alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
-    </a>
-  </div>
-  <h4>Pro Tips:</h4>
-  <ul class="tips-list">
-    <li>Abilities का सही इस्तेमाल करें।</li>
-    <li>Move करते रहें, enemy fire से बचें।</li>
-    <li>Weapons जल्दी collect करें।</li>
-  </ul>
+<!-- Free Fire -->
+<div class="game-card" data-category="mobile">
+<h3>Free Fire</h3>
+<p>Fast-paced battle royale with unique abilities.</p>
+<iframe src="https://www.youtube.com/embed/oq2Rz2I11l0" frameborder="0" allowfullscreen></iframe>
+<div class="download-links">
+<a href="https://play.google.com/store/apps/details?id=com.garena.game.ffi" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Google Play"></a>
+<a href="https://apps.apple.com/in/app/garena-free-fire/id1300146617" target="_blank"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store"></a>
+</div>
 </div>
 
+<!-- Fortnite -->
+<div class="game-card" data-category="pc">
+<h3>Fortnite</h3>
+<p>Build, fight, and survive in colorful world.</p>
+<iframe src="https://www.youtube.com/embed/yGqbypEMcVA" frameborder="0" allowfullscreen></iframe>
+<div class="download-links">
+<a href="https://www.epicgames.com/fortnite/en-US/download" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="PC"></a>
 </div>
+</div>
+
+<!-- Call of Duty Mobile -->
+<div class="game-card" data-category="mobile">
+<h3>Call of Duty: Mobile</h3>
+<p>Classic COD action on mobile.</p>
+<iframe src="https://www.youtube.com/embed/pqPCFUUbMiU" frameborder="0" allowfullscreen></iframe>
+<div class="download-links">
+<a href="https://play.google.com/store/apps/details?id=com.activision.callofduty.shooter" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Google Play"></a>
+<a href="https://apps.apple.com/app/call-of-duty-mobile/id1287282214" target="_blank"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store"></a>
+</div>
+</div>
+
+<!-- Apex Legends Mobile -->
+<div class="game-card" data-category="mobile">
+<h3>Apex Legends Mobile</h3>
+<p>Legendary squad-based battle royale experience.</p>
+<iframe src="https://www.youtube.com/embed/3G4-FG0Df9Y" frameborder="0" allowfullscreen></iframe>
+<div class="download-links">
+<a href="https://play.google.com/store/apps/details?id=com.ea.gp.apexlegendsmobilefps" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Google Play"></a>
+<a href="https://apps.apple.com/app/apex-legends-mobile/id1568502088" target="_blank"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store"></a>
+</div>
+</div>
+
+<!-- Rules of Survival -->
+<div class="game-card" data-category="mobile">
+<h3>Rules of Survival</h3>
+<p>Survive & defeat enemies in massive map.</p>
+<iframe src="https://www.youtube.com/embed/MIaxTzmuTO0" frameborder="0" allowfullscreen></iframe>
+<div class="download-links">
+<a href="https://play.google.com/store/apps/details?id=com.neteasegames.ros.gb" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Google Play"></a>
+<a href="https://apps.apple.com/app/rules-of-survival/id1258243503" target="_blank"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store"></a>
+</div>
+</div>
+
+<!-- Minecraft -->
+<div class="game-card" data-category="pc">
+<h3>Minecraft</h3>
+<p>Build, explore & survive in a blocky world.</p>
+<iframe src="https://www.youtube.com/embed/MmB9b5njVbA" frameborder="0" allowfullscreen></iframe>
+<div class="download-links">
+<a href="https://www.minecraft.net/en-us/download" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="PC"></a>
+<a href="https://apps.apple.com/app/minecraft/id479516143" target="_blank"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store"></a>
+</div>
+</div>
+
+<!-- PUBG PC -->
+<div class="game-card" data-category="pc">
+<h3>PUBG PC</h3>
+<p>Classic PC battle royale survival shooter.</p>
+<iframe src="https://www.youtube.com/embed/mRzAod-YH7I" frameborder="0" allowfullscreen></iframe>
+<div class="download-links">
+<a href="https://www.pubg.com/en-us/download/" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="PC"></a>
+</div>
+</div>
+
+<!-- Free Fire MAX -->
+<div class="game-card" data-category="mobile">
+<h3>Free Fire MAX</h3>
+<p>Enhanced version of Free Fire with better graphics.</p>
+<iframe src="https://www.youtube.com/embed/wN3Xw3gY8Qw" frameborder="0" allowfullscreen></iframe>
+<div class="download-links">
+<a href="https://play.google.com/store/apps/details?id=com.dts.freefiremax" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Google Play"></a>
+<a href="https://apps.apple.com/app/garena-free-fire-max/id1480714271" target="_blank"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store"></a>
+</div>
+</div>
+
+</div> <!-- End games-grid -->
 </section>
 
-<section id="page2">
-<h2>More Battle Royale Games</h2>
-<div class="games-grid">
-
-<div class="game-card">
-<h3>Call of Duty: Warzone</h3>
-<iframe src="https://www.youtube.com/embed/pqPCFUUbMiU" allowfullscreen></iframe>
-<div class="download-links">
-  <a href="https://www.callofduty.com/warzone" target="_blank" class="btn">Download PC/Console</a>
-</div>
-</div>
-
-<div class="game-card">
-<h3>Ring of Elysium</h3>
-<iframe src="https://www.youtube.com/embed/XMwBox8FITU" allowfullscreen></iframe>
-<div class="download-links">
-  <a href="https://www.ringofelysium.com/" target="_blank" class="btn">Download PC</a>
-</div>
-</div>
-
-</div>
-</section>
-
+<!-- Contact Section -->
 <section id="contact">
-<h2>Contact Us</h2>
+<h2 style="text-align:center;margin-top:20px;">Contact Us</h2>
 <form>
-  <input type="text" placeholder="Name" required>
-  <input type="email" placeholder="Email" required>
-  <textarea placeholder="Message" required></textarea>
-  <button type="submit">Send</button>
+<input type="text" placeholder="Name" required>
+<input type="email" placeholder="Email" required>
+<textarea placeholder="Message" required></textarea>
+<button type="submit">Send</button>
 </form>
 </section>
 
 <footer>
-<p>&copy; 2025 BattleZone</p>
+<p>&copy; 2025 BattleZone | Designed by Rehan Khan</p>
 </footer>
 
 <script>
-// Smooth scroll
-document.querySelectorAll('nav a').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const target = document.querySelector(link.getAttribute('href'));
-    if(target) target.scrollIntoView({behavior:'smooth'});
-  });
+// Smooth Scroll
+document.querySelectorAll('nav a').forEach(link=>{
+link.addEventListener('click',e=>{
+e.preventDefault();
+document.querySelector(link.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+});
 });
 
-// Scroll reveal for game cards
-const cards = document.querySelectorAll('.game-card');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting) entry.target.classList.add('visible');
-  });
-}, {threshold:0.2});
-cards.forEach(card => observer.observe(card));
+// Scroll Reveal
+const cards=document.querySelectorAll('.game-card');
+const observer=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting) entry.target.classList.add('visible');
+});
+},{threshold:0.2});
+cards.forEach(card=>observer.observe(card));
+
+// Dark/Light Toggle
+document.getElementById('mode-toggle').addEventListener('click',()=>{
+document.body.classList.toggle('light');
+});
+
+// Filter Games
+const filterButtons=document.querySelectorAll('.filter-buttons button');
+filterButtons.forEach(btn=>{
+btn.addEventListener('click',()=>{
+filterButtons.forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const filter=btn.getAttribute('data-filter');
+cards.forEach(card=>{
+if(filter==='all'||card.getAttribute('data-category')===filter){card.style.display='block';}
+else{card.style.display='none';}
+});
+});
+});
+
+// Mobile Navbar Toggle
+const menuToggle=document.querySelector('.menu-toggle');
+const navUl=document.querySelector('nav ul');
+menuToggle.addEventListener('click',()=>{
+navUl.classList.toggle('show');
+});
+
+// Contact form submit alert
+const form=document.querySelector('form');
+form.addEventListener('submit',e=>{
+e.preventDefault();
+alert('Message sent successfully!');
+form.reset();
+});
 </script>
 
 </body>
